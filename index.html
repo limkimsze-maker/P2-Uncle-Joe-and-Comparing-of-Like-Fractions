@@ -625,6 +625,13 @@
       background:linear-gradient(180deg,rgba(8,29,72,.97),rgba(3,7,26,.98));
       box-shadow:0 22px 70px rgba(0,0,0,.7),inset 0 0 35px rgba(114,247,255,.10);
     }
+    .endActions{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
 
     @media(max-width:980px){
       .missionBox{display:none;}
@@ -812,7 +819,10 @@
       <h2>Planet Saved!</h2>
       <div class="badge">Rocket Defence Mission Complete • Navigation Window Found</div>
       <p>Space Max compared the like fractions correctly, activated Fernando’s launcher, and stopped the asteroid before impact.</p>
-      <button id="playAgainBtn" class="primaryBtn">Play Again</button>
+      <div class="endActions">
+        <button id="returnHubBtn" class="primaryBtn">Return to Rocket Hub</button>
+        <button id="playAgainBtn" class="secondaryBtn">Play Again</button>
+      </div>
     </div>
   </div>
 </div>
@@ -888,6 +898,8 @@
   const teacherStatus = $('teacherStatus');
   const soundBtn = $('soundBtn');
   const endCard = $('endCard');
+  const SPACE_MAX_HUB_URL = "https://limkimsze-maker.github.io/P2-P3-Space-Max-and-the-Lost-Fraction-Rocket-Parts/";
+  const SPACE_MAX_PART_KEY = "space_max_part_p2_like_compare";
 
   let soundOn = true;
   let audioCtx = null;
@@ -906,6 +918,11 @@
   let activeCinematicAudio = null;
   let ambienceAudio = null;
   let ambienceStarted = false;
+
+  function saveSpaceMaxProgress(){
+    localStorage.setItem(SPACE_MAX_PART_KEY, "collected");
+    localStorage.setItem(SPACE_MAX_PART_KEY + "_completedAt", new Date().toISOString());
+  }
 
   const keys = { up:false, down:false, left:false, right:false };
   const launcherPos = {x: 0, z: -5.8};
@@ -1809,6 +1826,7 @@
         playCinematic('asteroidExplosion', () => {
           fernandoShipFlying = true;
           showDialogueSequence(endingDialogues, () => {
+            saveSpaceMaxProgress();
             endCard.style.display='flex';
             sound('correct');
           });
@@ -2011,6 +2029,7 @@
     };
   }
 
+  $('returnHubBtn').addEventListener('click',()=>{ location.href = SPACE_MAX_HUB_URL; });
   $('playAgainBtn').addEventListener('click',()=>location.reload());
 
 
